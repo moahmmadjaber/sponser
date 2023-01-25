@@ -38,7 +38,7 @@ class _HomeState extends State<Home> {
         _userModel.first_name = value;
       });
     });
-
+    showToast('يرجى الانتظار', ToastType.load);
         BlocProvider.of<HomeCubit>(context).getData();
 
   }
@@ -59,10 +59,10 @@ class _HomeState extends State<Home> {
       form();
     }
     else if (state is HomeLoading ){
-    showToast('يرجى الانتظار', ToastType.load);
     form();
     }
     else if (state is HomeComplete) {
+      EasyLoading.dismiss();
     }
     else if (state is HomeError) {
     showToast(state.err, ToastType.error);
@@ -195,9 +195,9 @@ class _HomeState extends State<Home> {
                               tileColor: Colors.lightBlue,
                               leading: Icon(Icons.info_outlined),
                               title: Text(
-                                  'data'
+                                  'مجموع المبالغ المدفوعة'
                               ),
-                              subtitle: Text('التفاصيل'),
+                              subtitle: Text(),
                             ),
                           ),
                         ],

@@ -11,12 +11,12 @@ void showToast(txt, ToastType type) {
   switch (type) {
     case ToastType.load:
       EasyLoading.instance
-        ..indicatorType = EasyLoadingIndicatorType.cubeGrid
+        ..indicatorType = EasyLoadingIndicatorType.circle
         ..loadingStyle = EasyLoadingStyle.custom
         ..indicatorSize = 45.0
         ..radius = 10.0
         ..backgroundColor = Colors.black54
-        ..indicatorColor = MyColor.colorMain
+        ..indicatorColor = Colors.blueAccent
         ..textColor = Colors.white70
         ..maskColor = Colors.black54.withOpacity(0.6)
         ..userInteractions = false
