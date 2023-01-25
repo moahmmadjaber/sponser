@@ -46,6 +46,8 @@ dependencies:
   shared_preferences: ^2.0.15
   flutter_loadingindicator: ^1.0.1
   loader_skeleton: ^0.0.4
+  intl: ^0.17.0
+
 
 
 
@@ -82,8 +84,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/
-  #   - images/a_dot_ham.jpeg
+    - lib/assets/lottie/alayn.json
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

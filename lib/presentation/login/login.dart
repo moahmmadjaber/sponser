@@ -14,19 +14,6 @@ import 'package:sponsor/utilis/shared_pref.dart';
 
 
 
-  @override
-  Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-
-        primarySwatch: Colors.blue,
-      ),
-      home: const Login(title: 'Flutter Demo Home Page'),
-    );
-  }
-
 class Login extends StatefulWidget {
   const Login({super.key,title});
 
@@ -42,9 +29,9 @@ class _LoginState extends State<Login> {
   Barcode? result;
   QRViewController? controller;
 
+
   @override
   Widget build(BuildContext context) {
-    _goNext()
 
     return GestureDetector(
         onTap: () {
@@ -55,8 +42,7 @@ class _LoginState extends State<Login> {
         },
         child: BlocListener<LoginCubit, LoginState>(
           listener: (context, state) async {
-            if (state is LoginInitial) {
-              form();
+            if (state is LoginInitial) {form();
             }
             else if (state is LoginLoading ){
               showToast('يرجى الانتظار', ToastType.load);
@@ -66,23 +52,20 @@ class _LoginState extends State<Login> {
               EasyLoading.dismiss();
               if (state.model.status==false){
               showToast('رقم المحسن غير صحيح', ToastType.error);}else
-             { await SharedPref.setUser(
+             { await SharedPref.setUser(result!.code,
                   state.model.first_name.toString(),
               state.model.status);
                 Navigator.pushReplacementNamed(context, Routes.homeRoute);}
 
             }
-            else if (state is LoginLoading) {
-              showToast('يرجى الانتظار', ToastType.load);
-              form();
-            }
+
             else if (state is LoginError) {
               showToast(state.err, ToastType.error);
               form();
 
             }
           },
-          child: form(),
+          child: form()
         )
     );
   }
@@ -164,13 +147,5 @@ class _LoginState extends State<Login> {
   void dispose() {
     controller?.dispose();
     super.dispose();
-  }
-}
-
-void _goNext() async{
-  if(await SharedPref.haveLogin()){
-    Navigator.pushReplacementNamed(context, Routes.homeRoute);
-  }else{
-    Navigator.pushReplacementNamed(context, Routes.loginRoute);
   }
 }

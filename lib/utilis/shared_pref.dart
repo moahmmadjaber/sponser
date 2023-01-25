@@ -2,8 +2,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sponsor/constants/enum_constant.dart';
 
 class SharedPref{
-  static Future<void> setUser(firstName,status) async {
+  static Future<void> setUser(ID,firstName,status) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('ID', ID);
     await prefs.setString('first_name', firstName);
     await prefs.setBool('status', status);
   }
@@ -50,24 +51,23 @@ class SharedPref{
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     var firstName = prefs.getString('first_name');
     return '$firstName';
-  }
 
+  }
+  static Future<String> getID() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var ID = prefs.getString('ID');
+    return'$ID';
+  }
   static Future<bool> haveLogin() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? res = prefs.getString('first_name');
+    String? res = prefs.getString('ID');
     return res == null ? false : true;
   }
   static Future<void> removeUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('ID');
     prefs.remove('first_name');
-    prefs.remove('last_name');
-    prefs.remove('username');
-    prefs.remove('country_code');
-    prefs.remove('phone');
-    prefs.remove('date_birth');
-    prefs.remove('id_gender');
-    prefs.remove('path_img');
-    prefs.remove('token');
-    prefs.remove('expiration');
+    prefs.remove('status');
+
   }
 }

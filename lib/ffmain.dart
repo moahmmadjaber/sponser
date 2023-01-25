@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateRoute: RouteGenerator.getRoute,
-      initialRoute: Routes.loginRoute,
+      initialRoute: Routes.splashRoute,
       builder: EasyLoading.init(),
       theme: ThemeData(
         bottomSheetTheme: const BottomSheetThemeData(backgroundColor: Colors.transparent),

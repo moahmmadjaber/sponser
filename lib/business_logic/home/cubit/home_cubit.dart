@@ -7,8 +7,16 @@ part 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeRepository repository;
-
   HomeCubit(this.repository) : super(HomeInitial());
+  Future<void> getData() async{
+    try{
+      emit(HomeLoading());
+      HomeModel res = await repository.getData();
+      emit(HomeComplete(res));
 
+    }catch(ex){
+      emit(HomeError(ex.toString()));
 
+    }
+  }
 }

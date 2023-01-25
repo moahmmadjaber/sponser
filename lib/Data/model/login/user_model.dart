@@ -1,9 +1,11 @@
 class UserModel {
+  String? ID;
   String? first_name;
   bool? status;
 
   UserModel(
-      {this.first_name,
+      {this.ID,
+        this.first_name,
         this.status
 
 

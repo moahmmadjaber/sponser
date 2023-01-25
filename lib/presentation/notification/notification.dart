@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sponsor/presentation/home/home.dart';
+import 'package:sponsor/utilis/routes.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NoificationPage extends StatefulWidget {
@@ -77,11 +78,7 @@ class _NoificationPageState extends State<NoificationPage> {
                             borderRadius: BorderRadius.circular(12)),
                         padding: EdgeInsets.all(7),
                         child: IconButton(
-                          color: Colors.white, onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) {
-                            return HomePage();
-                          }), (route) => false);
-                        }, icon:Icon( Icons.arrow_back_ios_new, size: 28,),
+                          color: Colors.white, onPressed: () { Navigator.pushReplacementNamed(context, Routes.homeRoute);}, icon:Icon( Icons.arrow_back_ios_new, size: 28,),
                         ),
                       ),
                       // hi sponsor
