@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_loadingindicator/flutter_loadingindicator.dart';
+import 'package:intl/intl.dart';
 import 'package:loader_skeleton/loader_skeleton.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sponsor/constants/custom_indicator.dart';
@@ -87,9 +88,6 @@ Widget failed(callBack) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Lottie.asset(
-        "assets/json/error.json",
-      ),
       const Text(
         'تعذر الاتصال بالخادم..تأكد من اتصال الشبكة',
         style: TextStyle(color: MyColor.colorRed),
@@ -114,34 +112,88 @@ Widget failed(callBack) {
 }
 
 Widget loading() {
+
+  DateTime now = DateTime.now();
+  String formattedDate = DateFormat.yMMMEd().format(now);
   return Container(
-      margin: const EdgeInsets.only(top: 20),
-      width: double.infinity,
-      child: ListView(
-        children: [
-          CardSkeleton(
-            isCircularImage: true,
-            isBottomLinesActive: true,
+    color: Colors.blue[800],
+
+    child: Column(
+      children: [SizedBox(height: 10,),
+
+        /*SizedBox(
+              height: 80,child:
+              Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                    color: Colors.lightBlue[300]?.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12)),
+                padding: EdgeInsets.all(0.1),
+                child: Image(
+                      image: new AssetImage("assets/aynf.png"),
+                      width: 90,
+                      height: 90,),
+              ),
+
+            ),*/
+        const SizedBox(height: 30,),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // hi sponsor
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('مرحبا ',
+                            style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600)),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Text(formattedDate,
+                          style: TextStyle(color: Colors.blue[200]),
+                        )
+                      ]),
+
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Colors.blue[600],
+                        borderRadius: BorderRadius.circular(12)),
+                    padding: EdgeInsets.all(7),
+                    child: IconButton(
+                      color: Colors.white, onPressed: () {
+                    }, icon: Icon(Icons.notifications, size: 28,),
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(onPressed:() {}, icon: Icon(Icons
+                      .logout))
+                ],
+              ),
+            ],
           ),
-          CardSkeleton(
-            isCircularImage: true,
-            isBottomLinesActive: true,
-          ),
-          CardSkeleton(
-            isCircularImage: true,
-            isBottomLinesActive: true,
-          ),
-        ],
-      ));
+        ),
+        const SizedBox(height: 50,),
+        Expanded(
+            child:  Container(),
+        )
+      ],
+    ),
+
+  );
 }
 
 Widget noData() {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Lottie.asset(
-        "assets/json/no_data.json",
-      ),
       const Center(
         child: Text('لا تتوفر بيانات'),
       )

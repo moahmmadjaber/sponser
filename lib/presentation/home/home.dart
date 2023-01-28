@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_loadingindicator/flutter_loadingindicator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:sponsor/Data/model/home/home_model.dart';
 import 'package:sponsor/Data/model/login/user_model.dart';
 import 'package:sponsor/business_logic/home/cubit/home_cubit.dart';
 import 'package:sponsor/constants/enum_constant.dart';
@@ -35,6 +36,7 @@ class _HomeState extends State<Home> {
 
     SharedPref.getName().then((value) {
       setState(() {
+
         _userModel.first_name = value;
       });
     });
@@ -52,36 +54,47 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-    child: BlocListener<HomeCubit, HomeState>(
-    listener: (context, state) async {
-    if (state is HomeInitial) {
-      form();
-    }
-    else if (state is HomeLoading ){
-    form();
-    }
-    else if (state is HomeComplete) {
-      EasyLoading.dismiss();
-    }
-    else if (state is HomeError) {
-    showToast(state.err, ToastType.error);
-    form();
+    return
+    Scaffold(
+      body: data(),);
 
-    }
-    },
-    child: form()
-    )
+
+  }
+  Widget data() {
+    return
+    BlocConsumer<HomeCubit, HomeState>(
+      builder: (context, state)  {
+        if (state is HomeInitial) {
+          return
+            loading();
+        }
+        else if (state is HomeLoading) {
+          return
+            loading();
+        }
+        else if (state is HomeComplete) {
+
+          EasyLoading.dismiss();
+          return form(state.model);
+
+        }
+        else if (state is HomeError) {
+          failed(retry);
+        }
+        return noData();
+      },
+      listener: (context, state) {},
     );
   }
-      Widget form() {
+
+      Widget form(model) {
         DateTime now = DateTime.now();
         String formattedDate = DateFormat.yMMMEd().format(now);
-        return Scaffold(
-          backgroundColor: Colors.blue[800],
-          body: SafeArea(
+        return Container(
+          color: Colors.blue[800],
+
             child: Column(
-              children: [
+              children: [SizedBox(height: 10,),
 
                 /*SizedBox(
               height: 80,child:
@@ -144,70 +157,74 @@ class _HomeState extends State<Home> {
                 ),
                 const SizedBox(height: 50,),
                 Expanded(
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(50),
-                        topRight: Radius.circular(50)),
-                    child: Container(
-                      color: Colors.grey[200],
-                      padding: const EdgeInsets.all(25),
-                      child: Column(
-                        children: [
-                          //heading
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('بيانات الكفيل ',
-                                style: GoogleFonts.tajawal(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20),),
-                              PopupMenuButton<Text>(
-                                  itemBuilder: (context) {
-                                    return [
-                                      const PopupMenuItem(
-                                        child: Text(
-                                          'First',
-                                        ),
-                                      ),
-                                      const PopupMenuItem(
-                                        child: Text(
-                                          'Second',
-                                        ),
-                                      ),
-                                      const PopupMenuItem(
-                                        child: Text(
-                                          'Third',
-                                        ),
-                                      ),
-                                    ];
-                                  }
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 20,),
-                          //listview
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16)
-                            ),
-                            child: const ListTile(horizontalTitleGap: 20,
-                              tileColor: Colors.lightBlue,
-                              leading: Icon(Icons.info_outlined),
-                              title: Text(
-                                  'مجموع المبالغ المدفوعة'
-                              ),
-                              subtitle: Text(),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  child:info(model)
                 )
               ],
             ),
-          ),
+
+        );
+      }
+      Widget info(model){
+    return  ClipRRect(
+        borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(50),
+        topRight: Radius.circular(50)),
+      child: Container(
+        color: Colors.grey[200],
+        padding: const EdgeInsets.all(25),
+        child: Column(
+        children: [
+        //heading
+        Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+        Text('بيانات الكفيل ',
+        style: GoogleFonts.tajawal(
+        fontWeight: FontWeight.bold,
+        fontSize: 20),),
+        PopupMenuButton<Text>(
+        itemBuilder: (context) {
+        return [
+        const PopupMenuItem(
+        child: Text(
+        'First',
+        ),
+        ),
+        const PopupMenuItem(
+        child: Text(
+        'Second',
+        ),
+        ),
+        const PopupMenuItem(
+        child: Text(
+        'Third',
+        ),
+        ),
+        ];
+        }
+        ),
+        ],
+        ),
+        const SizedBox(height: 20,),
+        //listview
+        Container(
+        decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16)
+        ),
+        child:  Row(children: [
+            Text(model.paidAMOUNTS.toString(),style: GoogleFonts.tajawal(
+                fontWeight: FontWeight.bold,
+                fontSize: 20))
+          ,Text('كمية المبالغ المدفوعة',style: GoogleFonts.tajawal(
+      fontWeight: FontWeight.bold,
+          fontSize: 20))
+        ],mainAxisAlignment:MainAxisAlignment.spaceAround ,)
+        ,
+        ),
+        ],
+        ),
+        ),
         );
       }
 
@@ -216,5 +233,9 @@ class _HomeState extends State<Home> {
     Navigator.pushReplacementNamed(context, Routes.loginRoute);
   }
 
+  void retry(){
+    BlocProvider.of<HomeCubit>(context).getData();
+  }
 }
+
 

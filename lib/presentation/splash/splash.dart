@@ -14,7 +14,7 @@ State<Splash> createState() => _SplashState();
 class _SplashState extends State<Splash>{
   Timer? _timer;
   _startDelay() {
-    _timer = Timer(const Duration(milliseconds: 3700), _goNext);}
+    _timer = Timer(const Duration(milliseconds: 1000), _goNext);}
     void _goNext() async{
       if(await SharedPref.haveLogin()){
         Navigator.pushReplacementNamed(context, Routes.homeRoute);
