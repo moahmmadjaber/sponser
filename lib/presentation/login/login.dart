@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_loadingindicator/flutter_loadingindicator.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:sponsor/presentation/home/home.dart';
 import 'package:sponsor/business_logic/login/cubit/login_cubit.dart';
 import 'package:sponsor/constants/enum_constant.dart';
-import 'package:sponsor/constants/my_color.dart';
 import 'package:sponsor/constants/my_constant.dart';
 import 'package:sponsor/utilis/routes.dart';
 import 'package:sponsor/utilis/shared_pref.dart';
-
-
 
 class Login extends StatefulWidget {
   const Login({super.key,title});
@@ -29,7 +24,6 @@ class _LoginState extends State<Login> {
   Barcode? result;
   QRViewController? controller;
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -45,7 +39,6 @@ class _LoginState extends State<Login> {
             if (state is LoginInitial) {form();
             }
             else if (state is LoginLoading ){
-              showToast('يرجى الانتظار', ToastType.load);
               form();
             }
             else if (state is LoginComplete) {
@@ -74,12 +67,11 @@ class _LoginState extends State<Login> {
   return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white30,
-        title: const Center(child: Text('مؤسسة العين للرعاية الاجتماعية',
-          style: TextStyle(color: Color.fromRGBO(0, 155, 0, 0.8),
-            fontFamily: 'Reem',
-            fontWeight: FontWeight.w200,
+        title:  Center(child: Text('مؤسسة العين للرعاية الاجتماعية',
+          style:GoogleFonts.tajawal(color: Colors.blueAccent,
+            fontWeight: FontWeight.bold,
             fontSize: 25
-            ,),)),
+            ,))),
 
       ),
       body: Center(
@@ -109,16 +101,14 @@ class _LoginState extends State<Login> {
             ),
             Expanded(
               flex: 1,
-              child: Center(child: ElevatedButton(
-                onPressed: _login,
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColor.colorMain
-                ),
-                child: const Text('تسجيل الدخول'),
-              )
+              child:Center(child:
+              Text('QR الرجاء قم بقرائة رمز',style: GoogleFonts.tajawal(
+                    fontWeight: FontWeight.bold,color: Colors.blueAccent,
+                    fontSize: 30),textAlign: TextAlign.center,),
 
+  )
 
-              ),
+              ,
             )
           ],
         ),
@@ -133,16 +123,15 @@ class _LoginState extends State<Login> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        if (result !=null) {
+          BlocProvider.of<LoginCubit>(context).login(result!.code);
+          controller?.dispose();
+          showToast('يرجى الانتظار', ToastType.load);
+        }
       });
     });
   }
 
-  void _login() {
-    if (result != null) {
-      FocusScope.of(context).unfocus();
-      BlocProvider.of<LoginCubit>(context).login(result!.code);
-    }
-  }
   @override
   void dispose() {
     controller?.dispose();

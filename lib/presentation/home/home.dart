@@ -1,20 +1,14 @@
-import 'dart:convert';
-import 'package:dio/dio.dart' as Dio;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_loadingindicator/flutter_loadingindicator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:sponsor/Data/model/home/home_model.dart';
 import 'package:sponsor/Data/model/login/user_model.dart';
 import 'package:sponsor/business_logic/home/cubit/home_cubit.dart';
 import 'package:sponsor/constants/enum_constant.dart';
 import 'package:sponsor/constants/my_constant.dart';
 import 'package:sponsor/utilis/routes.dart';
 import 'package:sponsor/utilis/shared_pref.dart';
-import '../../network/http_service.dart';
-import '../notification/notification.dart';
 
 
 class Home extends StatefulWidget {
@@ -28,8 +22,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
-  UserModel _userModel = UserModel();
+var selectedItem ;
+  final UserModel _userModel = UserModel();
   @override
   void initState() {
     super.initState();
@@ -42,7 +36,6 @@ class _HomeState extends State<Home> {
     });
     showToast('يرجى الانتظار', ToastType.load);
         BlocProvider.of<HomeCubit>(context).getData();
-
   }
 
 
@@ -56,6 +49,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return
     Scaffold(
+
       body: data(),);
 
 
@@ -79,9 +73,11 @@ class _HomeState extends State<Home> {
 
         }
         else if (state is HomeError) {
+          EasyLoading.dismiss();
+          showToast(state.err, ToastType.error);
           failed(retry);
         }
-        return noData();
+        return failed(retry);
       },
       listener: (context, state) {},
     );
@@ -94,7 +90,7 @@ class _HomeState extends State<Home> {
           color: Colors.blue[800],
 
             child: Column(
-              children: [SizedBox(height: 10,),
+              children: [const SizedBox(height: 10,),
 
                 /*SizedBox(
               height: 80,child:
@@ -141,14 +137,14 @@ class _HomeState extends State<Home> {
                             decoration: BoxDecoration(
                                 color: Colors.blue[600],
                                 borderRadius: BorderRadius.circular(12)),
-                            padding: EdgeInsets.all(7),
+                            padding: const EdgeInsets.all(7),
                             child: IconButton(
                               color: Colors.white, onPressed: () {Navigator.pushReplacementNamed(context, Routes.NotificationRoute);
-                              }, icon: Icon(Icons.notifications, size: 28,),
+                              }, icon: const Icon(Icons.notifications, size: 28,),
                             ),
                           ),
-                          Spacer(),
-                          IconButton(onPressed: logout, icon: Icon(Icons
+                          const Spacer(),
+                          IconButton(onPressed: logout, icon: const Icon(Icons
                               .logout))
                         ],
                       ),
@@ -169,7 +165,8 @@ class _HomeState extends State<Home> {
         borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(50),
         topRight: Radius.circular(50)),
-      child: Container(
+      child:model.beneficentname==null? noData():
+      Container(
         color: Colors.grey[200],
         padding: const EdgeInsets.all(25),
         child: Column(
@@ -182,51 +179,84 @@ class _HomeState extends State<Home> {
         style: GoogleFonts.tajawal(
         fontWeight: FontWeight.bold,
         fontSize: 20),),
-        PopupMenuButton<Text>(
-        itemBuilder: (context) {
-        return [
-        const PopupMenuItem(
-        child: Text(
-        'First',
+
+        PopupMenuButton(onSelected: (value) {
+        // your logic
+        setState(() {
+        selectedItem = value.toString();
+
+        });
+
+        }, itemBuilder: (BuildContext bc) {
+        return const [
+        PopupMenuItem(
+        child: Text("الصناديق"),
+        value: 'boxes',
         ),
+        PopupMenuItem(
+        child: Text("المالية"),
+        value: 'expens',
         ),
-        const PopupMenuItem(
-        child: Text(
-        'Second',
-        ),
-        ),
-        const PopupMenuItem(
-        child: Text(
-        'Third',
-        ),
-        ),
+        PopupMenuItem(
+        child: Text("الكفالات"),
+        value: 'spons',
+        )
         ];
-        }
-        ),
+        })
+
         ],
         ),
-        const SizedBox(height: 20,),
+        const SizedBox(height: 20),
+        Container(child:check(model))
         //listview
-        Container(
-        decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16)
-        ),
-        child:  Row(children: [
-            Text(model.paidAMOUNTS.toString(),style: GoogleFonts.tajawal(
-                fontWeight: FontWeight.bold,
-                fontSize: 20))
-          ,Text('كمية المبالغ المدفوعة',style: GoogleFonts.tajawal(
-      fontWeight: FontWeight.bold,
-          fontSize: 20))
-        ],mainAxisAlignment:MainAxisAlignment.spaceAround ,)
-        ,
-        ),
         ],
         ),
         ),
         );
       }
+      Widget check(model)
+      { if (selectedItem=='expens') {
+        return Container(child: Expenes(model));
+      }
+      else if (selectedItem=='boxes'){
+      return Container(child: Boxes(model));
+      }
+      return Container();
+      }
+      Widget Expenes(model){
+        return Container(
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16)
+          ),
+          child:  Row(mainAxisAlignment:MainAxisAlignment.spaceAround ,children: [
+            Text(numberFormat.format(model.paidAMOUNTS.toString()),style: GoogleFonts.tajawal(
+                fontWeight: FontWeight.bold,
+                fontSize: 20))
+            ,Text('كمية المبالغ المدفوعة',style: GoogleFonts.tajawal(
+                fontWeight: FontWeight.bold,
+                fontSize: 20))
+          ],)
+          ,
+        );
+      }
+Widget Boxes(model){
+  return Container(
+    decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16)
+    ),
+    child:  Row(mainAxisAlignment:MainAxisAlignment.spaceAround ,children: [
+      Text(model.beneficentOLDNO.toString(),style: GoogleFonts.tajawal(
+          fontWeight: FontWeight.bold,
+          fontSize: 20))
+      ,Text('كمية المبالغ المدفوعة',style: GoogleFonts.tajawal(
+          fontWeight: FontWeight.bold,
+          fontSize: 20))
+    ],)
+    ,
+  );
+}
 
   void logout(){
     SharedPref.removeUser();
@@ -235,6 +265,7 @@ class _HomeState extends State<Home> {
 
   void retry(){
     BlocProvider.of<HomeCubit>(context).getData();
+    showToast('يرجى الانتظار', ToastType.load);
   }
 }
 

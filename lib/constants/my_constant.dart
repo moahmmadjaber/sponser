@@ -1,9 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_loadingindicator/flutter_loadingindicator.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:loader_skeleton/loader_skeleton.dart';
-import 'package:lottie/lottie.dart';
 import 'package:sponsor/constants/custom_indicator.dart';
 import 'package:sponsor/constants/enum_constant.dart';
 import 'package:sponsor/constants/my_color.dart';
@@ -85,13 +84,15 @@ void showToast(txt, ToastType type) {
 }
 
 Widget failed(callBack) {
-  return Column(
+  return Container(color: Colors.lightBlue,child:
+    Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      const Text(
-        'تعذر الاتصال بالخادم..تأكد من اتصال الشبكة',
-        style: TextStyle(color: MyColor.colorRed),
-      ),
+       Text(
+        'تعذر الاتصال بالخادم..تأكد من اتصال الشبكة', style:GoogleFonts.tajawal(
+          fontWeight: FontWeight.bold,color: Colors.white,
+          fontSize: 15))
+      ,
       Center(
         child: TextButton.icon(
           // <-- TextButton
@@ -108,6 +109,7 @@ Widget failed(callBack) {
         ),
       )
     ],
+    )
   );
 }
 
@@ -119,7 +121,7 @@ Widget loading() {
     color: Colors.blue[800],
 
     child: Column(
-      children: [SizedBox(height: 10,),
+      children: [const SizedBox(height: 10,),
 
         /*SizedBox(
               height: 80,child:
@@ -166,14 +168,14 @@ Widget loading() {
                     decoration: BoxDecoration(
                         color: Colors.blue[600],
                         borderRadius: BorderRadius.circular(12)),
-                    padding: EdgeInsets.all(7),
+                    padding: const EdgeInsets.all(7),
                     child: IconButton(
                       color: Colors.white, onPressed: () {
-                    }, icon: Icon(Icons.notifications, size: 28,),
+                    }, icon: const Icon(Icons.notifications, size: 28,),
                     ),
                   ),
-                  Spacer(),
-                  IconButton(onPressed:() {}, icon: Icon(Icons
+                  const Spacer(),
+                  IconButton(onPressed:() {}, icon: const Icon(Icons
                       .logout))
                 ],
               ),
@@ -193,8 +195,8 @@ Widget loading() {
 Widget noData() {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      const Center(
+    children: const [
+      Center(
         child: Text('لا تتوفر بيانات'),
       )
     ],
